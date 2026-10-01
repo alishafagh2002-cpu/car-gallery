@@ -1,0 +1,8 @@
+{
+  "name": "Remix NOIR MOTORS | بازار خودروهای مناطق آزاد و گذر موقت",
+  "description": "بازار اختصاصی خودروهای مناطق آزاد، گذر موقت و سوپراسپرت‌های لوکس در ایران همراه با بررسی تخصصی و درخواست خرید آنلاین.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

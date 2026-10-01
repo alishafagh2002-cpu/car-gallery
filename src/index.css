@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-persian: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-luxury: 'Cinzel', serif;
+    --font-latin: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-persian);
+    background-color: #050505;
+    color: #F2F0EA;
+    overflow-x: hidden;
+  }
+}
+
+.font-luxury {
+  font-family: var(--font-luxury);
+}
+
+.font-latin {
+  font-family: var(--font-latin);
+}
+
+.font-persian {
+  font-family: var(--font-persian);
+}
+
+/* Luxury hairline borders and metallic gradients */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #F2F0EA 0%, #D4AF37 50%, #C5A880 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border {
+  border-color: rgba(212, 175, 55, 0.2);
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+::-webkit-scrollbar-thumb {
+  background: #262626;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #404040;
+}

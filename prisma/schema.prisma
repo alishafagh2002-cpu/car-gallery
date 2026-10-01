@@ -1,0 +1,444 @@
+// Prisma Schema for NOIR MOTORS - Persian Luxury Automotive Marketplace
+// Compatible with PostgreSQL & CockroachDB
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  VIP_CLIENT
+  SHOWROOM_MANAGER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+  RESERVED
+  IN_CUSTOMS
+  PENDING_INSPECTION
+  SOLD
+}
+
+enum LicenseStatus {
+  NATIONAL_PLATE        // پلاک ملی
+  FREE_ZONE             // پلاک منطقه آزاد
+  TEMPORARY_IMPORT      // گذر موقت
+  EMBASSY               // پلاک دیپلماتیک
+}
+
+enum DocumentStatus {
+  FULL_DOCS_CLEARED     // سند دست اول - ترخیص قطعی
+  CUSTOMS_BONDED        // دارای برگه تردد گمرکی
+  TAX_PAID              // مفاصاحساب مالیاتی پرداخت شده
+  READY_FOR_TRANSFER    // آماده انتقال سند
+}
+
+enum RequestStatus {
+  PENDING
+  UNDER_REVIEW
+  APPOINTMENT_SCHEDULED
+  DEPOSIT_RECEIVED
+  COMPLETED
+  REJECTED
+  CANCELLED
+}
+
+enum AppointmentType {
+  SHOWROOM_VIEWING
+  VIP_TEST_DRIVE
+  TECHNICAL_INSPECTION
+}
+
+model User {
+  id                String             @id @default(uuid())
+  email             String?            @unique
+  phone             String             @unique
+  fullName          String
+  role              Role               @default(USER)
+  nationalId        String?
+  avatarUrl         String?
+  favorites         Favorite[]
+  comparisons       Comparison[]
+  inquiries         Inquiry[]
+  purchaseRequests  PurchaseRequest[]
+  viewingRequests   ViewingRequest[]
+  testDriveRequests TestDriveRequest[]
+  notifications     Notification[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@index([phone])
+  @@index([role])
+}
+
+model Brand {
+  id          String    @id @default(uuid())
+  nameEn      String    @unique
+  nameFa      String
+  slug        String    @unique
+  logoUrl     String?
+  country     String
+  models      Model[]
+  vehicles    Vehicle[]
+  createdAt   DateTime  @default(now())
+
+  @@index([slug])
+}
+
+model Model {
+  id          String    @id @default(uuid())
+  brandId     String
+  brand       Brand     @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  nameEn      String
+  nameFa      String
+  slug        String
+  trims       Trim[]
+  vehicles    Vehicle[]
+  createdAt   DateTime  @default(now())
+
+  @@unique([brandId, nameEn])
+  @@index([brandId])
+}
+
+model Trim {
+  id          String    @id @default(uuid())
+  modelId     String
+  model       Model     @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  name        String
+  yearFrom    Int
+  yearTo      Int?
+  vehicles    Vehicle[]
+}
+
+model FreeZone {
+  id              String     @id @default(uuid())
+  nameFa          String     @unique // کیش، قشم، اروند، انزلی، چابهار، ماکو
+  nameEn          String     @unique // kish, qeshm, arvand, anzali, chabahar, maku
+  slug            String     @unique
+  customsCode     String
+  taxIncentive    String
+  descriptionFa   String
+  coverImageUrl   String?
+  locations       Location[]
+  vehicles        Vehicle[]
+}
+
+model Location {
+  id          String     @id @default(uuid())
+  cityFa      String
+  cityEn      String
+  provinceFa  String
+  freeZoneId  String?
+  freeZone    FreeZone?  @relation(fields: [freeZoneId], references: [id])
+  vehicles    Vehicle[]
+  showrooms   Showroom[]
+
+  @@index([freeZoneId])
+}
+
+model Showroom {
+  id          String     @id @default(uuid())
+  nameFa      String
+  nameEn      String
+  locationId  String
+  location    Location   @relation(fields: [locationId], references: [id])
+  addressFa   String
+  phone       String
+  managerName String?
+  vehicles    Vehicle[]
+}
+
+model Seller {
+  id          String     @id @default(uuid())
+  fullName    String
+  phone       String
+  isVerified  Boolean    @default(true)
+  sellerType  String     // SHOWROOM, PRIVATE_COLLECTOR, OFFICIAL_IMPORTER
+  vehicles    Vehicle[]
+  createdAt   DateTime   @default(now())
+}
+
+model Vehicle {
+  id                 String               @id @default(uuid())
+  slug               String               @unique
+  brandId            String
+  brand              Brand                @relation(fields: [brandId], references: [id])
+  modelId            String
+  model              Model                @relation(fields: [modelId], references: [id])
+  trimId             String?
+  trim               Trim?                @relation(fields: [trimId], references: [id])
+  sellerId           String?
+  seller             Seller?              @relation(fields: [sellerId], references: [id])
+  showroomId         String?
+  showroom           Showroom?            @relation(fields: [showroomId], references: [id])
+  locationId         String
+  location           Location             @relation(fields: [locationId], references: [id])
+  freeZoneId         String?
+  freeZone           FreeZone?            @relation(fields: [freeZoneId], references: [id])
+
+  year               Int
+  // Integer-safe monetary representation in Tomans (1 Toman = 10 Rials)
+  priceToman         BigInt
+  priceUsd           Int?
+  mileage            Int                  // in kilometers
+  fuelType           String               // BENZINE, HYBRID, ELECTRIC
+  transmission       String               // DUAL_CLUTCH, AUTOMATIC, MANUAL
+  engine             String               // e.g. "4.0L Twin-Turbo V8"
+  enginePower        Int                  // in Horsepower (HP)
+  bodyType           String               // COUPE, SUV, SEDAN, CONVERTIBLE
+  driveType          String               // AWD, RWD, 4WD
+  exteriorColorFa    String
+  exteriorColorEn    String
+  interiorColorFa    String
+  interiorColorEn    String
+
+  temporaryImport    Boolean              @default(false)
+  temporaryLicenseDaysRemaining Int?
+  licenseStatus      LicenseStatus        @default(NATIONAL_PLATE)
+  documentStatus     DocumentStatus       @default(READY_FOR_TRANSFER)
+  availabilityStatus AvailabilityStatus   @default(AVAILABLE)
+  featured           Boolean              @default(false)
+
+  headlineFa         String
+  descriptionFa      String
+  descriptionEn      String?
+
+  images             VehicleImage[]
+  videos             VehicleVideo[]
+  media360           Vehicle360[]
+  specifications     VehicleSpecification?
+  documents          VehicleDocument[]
+  priceHistories     PriceHistory[]
+  favorites          Favorite[]
+  comparisons        Comparison[]
+  inquiries          Inquiry[]
+  purchaseRequests   PurchaseRequest[]
+  viewingRequests    ViewingRequest[]
+  testDriveRequests  TestDriveRequest[]
+
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  @@index([brandId])
+  @@index([modelId])
+  @@index([locationId])
+  @@index([freeZoneId])
+  @@index([priceToman])
+  @@index([year])
+  @@index([temporaryImport])
+  @@index([availabilityStatus])
+}
+
+model VehicleImage {
+  id          String   @id @default(uuid())
+  vehicleId   String
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  url         String
+  captionFa   String?
+  category    String   // EXTERIOR, INTERIOR, ENGINE, WHEEL, COCKPIT
+  isPrimary   Boolean  @default(false)
+  sortOrder   Int      @default(0)
+
+  @@index([vehicleId])
+}
+
+model VehicleVideo {
+  id          String   @id @default(uuid())
+  vehicleId   String
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  videoUrl    String
+  posterUrl   String?
+  titleFa     String?
+}
+
+model Vehicle360 {
+  id          String   @id @default(uuid())
+  vehicleId   String
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  frameUrls   String[] // Array of frame image URLs for full rotation
+  frameCount  Int      @default(36)
+}
+
+model VehicleSpecification {
+  id                   String   @id @default(uuid())
+  vehicleId            String   @unique
+  vehicle              Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  acceleration0to100   Float    // e.g. 3.4 seconds
+  topSpeedKmh          Int      // e.g. 320 km/h
+  torqueNm             Int      // e.g. 850 Nm
+  displacementCc       Int?     // e.g. 3982 cc
+  cylinders            Int?     // e.g. 8
+  weightKg             Int?     // e.g. 2480 kg
+  fuelTankLiters       Int?     // e.g. 100
+  dimensionsMm         String?  // e.g. "4825 x 1931 x 1969"
+  featuresFa           String[] // Detailed feature bullets in Persian
+}
+
+model VehicleDocument {
+  id          String   @id @default(uuid())
+  vehicleId   String
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  titleFa     String
+  docType     String   // CUSTOMS_DECLARATION, TECHNICAL_CERT, REGISTRATION, TAX_CLEARANCE
+  fileUrl     String?
+  isVerified  Boolean  @default(true)
+}
+
+model PriceHistory {
+  id            String   @id @default(uuid())
+  vehicleId     String
+  vehicle       Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  oldPriceToman BigInt
+  newPriceToman BigInt
+  changeReason  String?
+  changedAt     DateTime @default(now())
+
+  @@index([vehicleId])
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicleId String
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  sessionId String?  // For guest users
+  createdAt DateTime @default(now())
+
+  @@unique([userId, vehicleId])
+  @@index([vehicleId])
+}
+
+model Comparison {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicleId String
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  sessionId String?
+  createdAt DateTime @default(now())
+}
+
+model PurchaseRequest {
+  id                      String        @id @default(uuid())
+  trackingCode            String        @unique // e.g. "NOIR-78492"
+  vehicleId               String
+  vehicle                 Vehicle       @relation(fields: [vehicleId], references: [id])
+  userId                  String?
+  user                    User?         @relation(fields: [userId], references: [id])
+
+  fullName                String
+  phone                   String
+  nationalId              String?
+  city                    String
+  contactMethod           String        // PHONE_CALL, WHATSAPP, IN_PERSON
+  preferredAppointmentDate DateTime?
+  preferredCurrency       String        @default("TOMAN") // TOMAN, USD, AED
+  paymentProvider         String        @default("CONCIERGE_ESCROW")
+  notes                   String?
+  status                  RequestStatus @default(PENDING)
+
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+
+  @@index([trackingCode])
+  @@index([status])
+  @@index([vehicleId])
+}
+
+model ViewingRequest {
+  id                      String        @id @default(uuid())
+  trackingCode            String        @unique
+  vehicleId               String
+  vehicle                 Vehicle       @relation(fields: [vehicleId], references: [id])
+  userId                  String?
+  user                    User?         @relation(fields: [userId], references: [id])
+
+  fullName                String
+  phone                   String
+  preferredDate           DateTime
+  preferredTimeSlot       String        // MORNING, AFTERNOON, EVENING
+  showroomLocation        String
+  status                  RequestStatus @default(PENDING)
+  createdAt               DateTime      @default(now())
+
+  @@index([vehicleId])
+}
+
+model TestDriveRequest {
+  id                      String        @id @default(uuid())
+  trackingCode            String        @unique
+  vehicleId               String
+  vehicle                 Vehicle       @relation(fields: [vehicleId], references: [id])
+  userId                  String?
+  user                    User?         @relation(fields: [userId], references: [id])
+
+  fullName                String
+  phone                   String
+  drivingLicenseNumber    String
+  preferredDate           DateTime
+  status                  RequestStatus @default(PENDING)
+  createdAt               DateTime      @default(now())
+
+  @@index([vehicleId])
+}
+
+model Inquiry {
+  id          String   @id @default(uuid())
+  vehicleId   String?
+  vehicle     Vehicle? @relation(fields: [vehicleId], references: [id])
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+  fullName    String
+  phone       String
+  message     String
+  isAnswered  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model ContactRequest {
+  id          String   @id @default(uuid())
+  fullName    String
+  phone       String
+  email       String?
+  subject     String
+  message     String
+  isHandled   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model BlogPost {
+  id          String   @id @default(uuid())
+  titleFa     String
+  slug        String   @unique
+  excerptFa   String
+  contentFa   String
+  coverImage  String
+  authorName  String
+  publishedAt DateTime @default(now())
+}
+
+model FAQ {
+  id          String   @id @default(uuid())
+  questionFa  String
+  answerFa    String
+  category    String   // FREE_ZONE, TEMPORARY_IMPORT, PAYMENT, INSPECTION
+  sortOrder   Int      @default(0)
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  body        String
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}

@@ -1,11 +1,15 @@
 import React from 'react';
 import { ShieldCheck, Phone, MapPin, Clock, ArrowUpRight } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface FooterProps {
   onNavigate: (path: string) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+  const { language, t } = useLanguage();
+  const isEn = language === 'EN';
+
   return (
     <footer className="bg-[#050505] border-t border-white/[0.08] text-[#F2F0EA]/70 text-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -16,62 +20,66 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               NOIR MOTORS
             </span>
             <p className="text-xs leading-relaxed text-white/60">
-              سامانه تخصصی کارشناسی، اصالت‌سنجی و مبادله سوپراسپرت‌ها و خودروهای لوکس مناطق آزاد و گذر موقت در سراسر ایران. تعهد به شفافیت کامل مدارک و همراهی گام‌به‌گام حقوقی.
+              {isEn
+                ? 'Certified concierge and acquisition registry for Free Trade Zone supercars and temporary import vehicles in Iran. 100% legal compliance and verified customs declarations.'
+                : 'سامانه تخصصی کارشناسی، اصالت‌سنجی و مبادله سوپراسپرت‌ها و خودروهای لوکس مناطق آزاد و گذر موقت در سراسر ایران. تعهد به شفافیت کامل مدارک و همراهی گام‌به‌گام حقوقی.'}
             </p>
             <div className="pt-2 flex items-center gap-2 text-xs text-[#D4AF37]">
               <ShieldCheck className="w-4 h-4" />
-              <span>کارشناسی رسمی ۱۰۰ قسمتی رنگ و فنی</span>
+              <span>
+                {isEn ? 'Official 100-Point Inspection & Appraisal' : 'کارشناسی رسمی ۱۰۰ قسمتی رنگ و فنی'}
+              </span>
             </div>
           </div>
 
           {/* Free Zones Gateway */}
           <div className="space-y-3">
             <h4 className="text-white font-medium text-xs tracking-wider uppercase">
-              مناطق آزاد ویژه
+              {isEn ? 'Special Economic Zones' : 'مناطق آزاد ویژه'}
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
                 <button
                   onClick={() => onNavigate('/locations/kish')}
-                  className="hover:text-white transition-colors flex items-center justify-between w-full text-right"
+                  className="hover:text-white transition-colors flex items-center justify-between w-full text-start"
                 >
-                  <span>منطقه آزاد کیش</span>
+                  <span>{isEn ? 'Kish Free Zone' : 'منطقه آزاد کیش'}</span>
                   <ArrowUpRight className="w-3 h-3 opacity-40" />
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => onNavigate('/locations/arvand')}
-                  className="hover:text-white transition-colors flex items-center justify-between w-full text-right"
+                  className="hover:text-white transition-colors flex items-center justify-between w-full text-start"
                 >
-                  <span>منطقه آزاد اروند (اهواز/آبادان)</span>
+                  <span>{isEn ? 'Arvand Free Zone (Ahvaz)' : 'منطقه آزاد اروند (اهواز/آبادان)'}</span>
                   <ArrowUpRight className="w-3 h-3 opacity-40" />
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => onNavigate('/locations/qeshm')}
-                  className="hover:text-white transition-colors flex items-center justify-between w-full text-right"
+                  className="hover:text-white transition-colors flex items-center justify-between w-full text-start"
                 >
-                  <span>منطقه آزاد قشم</span>
+                  <span>{isEn ? 'Qeshm Free Zone' : 'منطقه آزاد قشم'}</span>
                   <ArrowUpRight className="w-3 h-3 opacity-40" />
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => onNavigate('/locations/anzali')}
-                  className="hover:text-white transition-colors flex items-center justify-between w-full text-right"
+                  className="hover:text-white transition-colors flex items-center justify-between w-full text-start"
                 >
-                  <span>منطقه آزاد انزلی</span>
+                  <span>{isEn ? 'Anzali Free Zone' : 'منطقه آزاد انزلی'}</span>
                   <ArrowUpRight className="w-3 h-3 opacity-40" />
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => onNavigate('/locations/chabahar')}
-                  className="hover:text-white transition-colors flex items-center justify-between w-full text-right"
+                  className="hover:text-white transition-colors flex items-center justify-between w-full text-start"
                 >
-                  <span>منطقه آزاد چابهار</span>
+                  <span>{isEn ? 'Chabahar Free Port' : 'منطقه آزاد چابهار'}</span>
                   <ArrowUpRight className="w-3 h-3 opacity-40" />
                 </button>
               </li>
@@ -81,32 +89,32 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           {/* Quick Access */}
           <div className="space-y-3">
             <h4 className="text-white font-medium text-xs tracking-wider uppercase">
-              دسترسی سریع
+              {isEn ? 'Quick Access' : 'دسترسی سریع'}
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
                 <button onClick={() => onNavigate('/cars')} className="hover:text-white transition-colors">
-                  فهرست موجودی خودروها
+                  {t('navCars')}
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate('/cars?temporaryImport=true')} className="hover:text-white transition-colors">
-                  خودروهای گذر موقت
+                  {t('navTemporaryImport')}
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate('/about')} className="hover:text-white transition-colors">
-                  درباره نوآر موتورز
+                  {t('navAbout')}
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate('/contact')} className="hover:text-white transition-colors">
-                  رزرو مشاوره حضوری
+                  {t('navContact')}
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate('/admin')} className="text-[#D4AF37]/80 hover:text-[#D4AF37] transition-colors">
-                  پنل مدیریت متمرکز
+                  {t('navAdmin')}
                 </button>
               </li>
             </ul>
@@ -115,16 +123,22 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           {/* Showroom Contacts */}
           <div className="space-y-3">
             <h4 className="text-white font-medium text-xs tracking-wider uppercase">
-              دفاتر و شو‌روم‌های مرکزی
+              {isEn ? 'Executive Showrooms' : 'دفاتر و شو‌روم‌های مرکزی'}
             </h4>
             <div className="space-y-2.5 text-xs text-white/60">
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
-                <span>تهران: خیابان فرشته (شهید فیاضی)، برج نگین، طبقه VIP</span>
+                <span>
+                  {isEn
+                    ? 'Tehran: Fereshteh St (Fayyazi), Negin Tower VIP Suite'
+                    : 'تهران: خیابان فرشته (شهید فیاضی)، برج نگین، طبقه VIP'}
+                </span>
               </div>
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
-                <span>کیش: بلوار ایران، برج مالی بهکیش</span>
+                <span>
+                  {isEn ? 'Kish Island: Iran Blvd, Behkish Financial Tower' : 'کیش: بلوار ایران، برج مالی بهکیش'}
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-[#D4AF37] shrink-0" />
@@ -132,7 +146,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-[#D4AF37] shrink-0" />
-                <span>شنبه تا پنجشنبه: ۱۰:۰۰ الی ۲۱:۰۰</span>
+                <span>{isEn ? 'Sat to Thu: 10:00 - 21:00' : 'شنبه تا پنجشنبه: ۱۰:۰۰ الی ۲۱:۰۰'}</span>
               </div>
             </div>
           </div>
@@ -141,10 +155,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         {/* Hairline divider & Bottom quiet legal text */}
         <div className="pt-8 border-t border-white/[0.06] flex flex-col md:flex-row items-center justify-between text-xs text-white/40 gap-4">
           <p>
-            © {new Date().getFullYear()} NOIR MOTORS IRAN. تمامی حقوق مادی و معنوی محفوظ است.
+            © {new Date().getFullYear()} NOIR MOTORS IRAN. {t('footerRights')}
           </p>
-          <p className="text-[11px] text-white/30 text-center md:text-left">
-            کلیه معاملات تحت نظارت وکلای پایه یک دادگستری و استعلام رسمی سامانه گمرک و پلیس راهور انجام می‌پذیرد.
+          <p className="text-[11px] text-white/30 text-center md:text-start">
+            {isEn
+              ? 'All transactions audited by registered corporate legal counsel and customs clearance specialists.'
+              : 'کلیه معاملات تحت نظارت وکلای پایه یک دادگستری و استعلام رسمی سامانه گمرک و پلیس راهور انجام می‌پذیرد.'}
           </p>
         </div>
       </div>

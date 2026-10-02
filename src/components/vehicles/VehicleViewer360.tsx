@@ -79,7 +79,7 @@ export const VehicleViewer360: React.FC<VehicleViewer360Props> = ({ vehicle }) =
   };
 
   // Pick corresponding visual asset
-  const baseImg = vehicle.images[0]?.url || '/src/assets/images/hero_supercar_studio_1790889986619.jpg';
+  const baseImg = vehicle.images[0]?.url || '/images/hero_supercar_studio_1790889986619.jpg';
 
   return (
     <div

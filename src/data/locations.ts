@@ -16,7 +16,7 @@ export const FREE_ZONES: Record<string, FreeZoneInfo> = {
       'سرویس‌های ادواری رسمی و سوخت استاندارد سوپر',
     ],
     vehicleCount: 7,
-    coverImage: '/src/assets/images/hero_kish_marina_1790889976659.jpg',
+    coverImage: '/images/hero_kish_marina_1790889976659.jpg',
   },
   qeshm: {
     slug: 'qeshm',
@@ -32,7 +32,7 @@ export const FREE_ZONES: Record<string, FreeZoneInfo> = {
       'انتقال رسمی سند به کیشوندان و ساکنین مجاز',
     ],
     vehicleCount: 4,
-    coverImage: '/src/assets/images/hero_luxury_hypercar_1790889964433.jpg',
+    coverImage: '/images/hero_luxury_hypercar_1790889964433.jpg',
   },
   arvand: {
     slug: 'arvand',
@@ -48,7 +48,7 @@ export const FREE_ZONES: Record<string, FreeZoneInfo> = {
       'معاینه فنی و ترخیص تخصصی در گمرک بندر خرمشهر',
     ],
     vehicleCount: 5,
-    coverImage: '/src/assets/images/hero_luxury_sedan_1790889996887.jpg',
+    coverImage: '/images/hero_luxury_sedan_1790889996887.jpg',
   },
   anzali: {
     slug: 'anzali',
@@ -64,7 +64,7 @@ export const FREE_ZONES: Record<string, FreeZoneInfo> = {
       'امکان درخواست مرخصی و پلاک موقت تردد سراسری',
     ],
     vehicleCount: 4,
-    coverImage: '/src/assets/images/hero_supercar_studio_1790889986619.jpg',
+    coverImage: '/images/hero_supercar_studio_1790889986619.jpg',
   },
   chabahar: {
     slug: 'chabahar',
@@ -80,7 +80,7 @@ export const FREE_ZONES: Record<string, FreeZoneInfo> = {
       'امکان ترانزیت و دریافت پلاک گذر موقت ملی',
     ],
     vehicleCount: 3,
-    coverImage: '/src/assets/images/hero_kish_marina_1790889976659.jpg',
+    coverImage: '/images/hero_kish_marina_1790889976659.jpg',
   },
   maku: {
     slug: 'maku',
@@ -96,6 +96,6 @@ export const FREE_ZONES: Record<string, FreeZoneInfo> = {
       'مجوز تردد ادواری در استان‌های همجوار',
     ],
     vehicleCount: 2,
-    coverImage: '/src/assets/images/hero_luxury_sedan_1790889996887.jpg',
+    coverImage: '/images/hero_luxury_sedan_1790889996887.jpg',
   },
 };

@@ -12,7 +12,7 @@ import { SEED_VEHICLES } from '../data/seedVehicles';
 import { FREE_ZONES } from '../data/locations';
 
 const STORAGE_KEYS = {
-  VEHICLES: 'noir_vehicles_v1',
+  VEHICLES: 'noir_vehicles_v6',
   PURCHASE_REQUESTS: 'noir_purchase_requests_v1',
   VIEWING_REQUESTS: 'noir_viewing_requests_v1',
   FAVORITES: 'noir_favorites_v1',
@@ -27,7 +27,15 @@ function getStoredVehicles(): Vehicle[] {
       localStorage.setItem(STORAGE_KEYS.VEHICLES, JSON.stringify(SEED_VEHICLES));
       return SEED_VEHICLES;
     }
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw) as Vehicle[];
+    // Sanitize image URLs in case old paths were cached in client's localStorage
+    return parsed.map((v) => ({
+      ...v,
+      images: (v.images || []).map((img) => ({
+        ...img,
+        url: img.url.replace('/src/assets/images/', '/images/'),
+      })),
+    }));
   } catch {
     return SEED_VEHICLES;
   }
@@ -145,18 +153,21 @@ export const CarService = {
     const all = getStoredVehicles();
     let filtered = [...all];
 
-    // Search query (matches title, brand, model, engine, city)
+    // Search query (matches title, brand, model, engine, city, year)
     if (params.search?.trim()) {
-      const q = params.search.trim().toLowerCase();
+      const rawQ = params.search.trim().toLowerCase();
+      // Normalize Persian numerals to English digits
+      const normalizedQ = rawQ.replace(/[۰-۹]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d).toString());
       filtered = filtered.filter(
         (v) =>
-          v.brandNameEn.toLowerCase().includes(q) ||
-          v.brandNameFa.toLowerCase().includes(q) ||
-          v.modelNameEn.toLowerCase().includes(q) ||
-          v.modelNameFa.toLowerCase().includes(q) ||
-          v.headlineFa.toLowerCase().includes(q) ||
-          v.engine.toLowerCase().includes(q) ||
-          v.locationCityFa.toLowerCase().includes(q)
+          v.brandNameEn.toLowerCase().includes(rawQ) ||
+          v.brandNameFa.toLowerCase().includes(rawQ) ||
+          v.modelNameEn.toLowerCase().includes(rawQ) ||
+          v.modelNameFa.toLowerCase().includes(rawQ) ||
+          v.headlineFa.toLowerCase().includes(rawQ) ||
+          v.engine.toLowerCase().includes(rawQ) ||
+          v.locationCityFa.toLowerCase().includes(rawQ) ||
+          v.year.toString().includes(normalizedQ)
       );
     }
 
@@ -349,7 +360,7 @@ export const CarService = {
       freeZoneSlug: car.freeZoneSlug,
       freeZoneNameFa: car.freeZoneSlug ? FREE_ZONES[car.freeZoneSlug]?.nameFa : undefined,
       images: car.images && car.images.length > 0 ? car.images : [
-        { id: `img-${newId}-1`, url: '/src/assets/images/hero_luxury_hypercar_1790889964433.jpg', category: 'EXTERIOR', isPrimary: true },
+        { id: `img-${newId}-1`, url: '/images/hero_luxury_hypercar_1790889964433.jpg', category: 'EXTERIOR', isPrimary: true },
       ],
       specifications: car.specifications || {
         acceleration0to100: 4.0,

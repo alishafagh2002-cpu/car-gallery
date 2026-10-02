@@ -4,6 +4,7 @@ import { Vehicle, CurrencyMode, PurchaseRequestRecord } from '../../types';
 import { CarService } from '../../services/api';
 import { paymentProviders } from '../../services/paymentProvider';
 import { formatPrice } from '../../utils/formatters';
+import { ProgressTracker, ProgressStep } from '../common/ProgressTracker';
 
 interface PurchaseModalProps {
   vehicle: Vehicle;
@@ -106,12 +107,12 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
     }
   };
 
-  const stepTitles = [
-    'مشخصات خریدار',
-    'تایید خودرو و شرایط مالی',
-    'روش هماهنگی',
-    'زمان‌بندی جلسه کارشناسی',
-    'صدور پیش‌فاکتور و کد رهگیری',
+  const workflowSteps: ProgressStep[] = [
+    { number: 1, label: 'مشخصات خریدار', description: 'هویت و تماس' },
+    { number: 2, label: 'شرایط مالی', description: 'ارز و ودیعه' },
+    { number: 3, label: 'روش هماهنگی', description: 'نحوه ارتباط' },
+    { number: 4, label: 'جلسه کارشناسی', description: 'تعیین زمان' },
+    { number: 5, label: 'صدور پیش‌فاکتور', description: 'کد رهگیری' },
   ];
 
   return (
@@ -124,7 +125,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
               VIP ACQUISITION WORKFLOW · STEP {currentStep} OF 5
             </div>
             <h2 className="text-lg font-bold text-white font-persian mt-0.5">
-              {stepTitles[currentStep - 1]}
+              {workflowSteps[currentStep - 1]?.label}
             </h2>
           </div>
           <button
@@ -135,11 +136,16 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
           </button>
         </div>
 
-        {/* Step Progress Bar */}
-        <div className="w-full bg-white/[0.05] h-1">
-          <div
-            className="bg-[#D4AF37] h-full transition-all duration-300"
-            style={{ width: `${(currentStep / 5) * 100}%` }}
+        {/* Cinematic Gold Progress Tracker */}
+        <div className="px-6 py-3.5 bg-black/50 border-b border-white/[0.06]">
+          <ProgressTracker
+            steps={workflowSteps}
+            currentStep={currentStep}
+            onStepClick={(step) => {
+              if (step < currentStep && currentStep < 5) {
+                setCurrentStep(step as any);
+              }
+            }}
           />
         </div>
 

@@ -259,7 +259,14 @@ async function startServer() {
     });
   });
 
-  // ==================== VITE MIDDLEWARE SETUP ====================
+  // ==================== STATIC ASSETS & VITE MIDDLEWARE SETUP ====================
+  // Serve static assets unconditionally so that images are always accessible in production
+  app.use('/src/assets', express.static(path.resolve(__dirname, 'src/assets')));
+  app.use('/src/assets', express.static(path.resolve(__dirname, 'dist/src/assets')));
+  app.use('/images', express.static(path.resolve(__dirname, 'public/images')));
+  app.use('/images', express.static(path.resolve(__dirname, 'dist/images')));
+  app.use(express.static(path.resolve(__dirname, 'public')));
+
   const isProduction = process.env.NODE_ENV === 'production';
   if (!isProduction) {
     const vite = await createViteServer({

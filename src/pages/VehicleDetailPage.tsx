@@ -17,6 +17,7 @@ import {
   Layers,
   MapPin,
   Building,
+  Download,
 } from 'lucide-react';
 import { Vehicle, CurrencyMode } from '../types';
 import { CarService } from '../services/api';
@@ -24,7 +25,9 @@ import { VehicleViewer360 } from '../components/vehicles/VehicleViewer360';
 import { VehicleCard } from '../components/vehicles/VehicleCard';
 import { PurchaseModal } from '../components/vehicles/PurchaseModal';
 import { AppointmentModal } from '../components/vehicles/AppointmentModal';
+import { VehiclePdfBrochureModal } from '../components/vehicles/VehiclePdfBrochureModal';
 import { formatPrice, formatMileage } from '../utils/formatters';
+import { getSafeImageUrl, handleImageError } from '../utils/imageHelper';
 
 interface VehicleDetailPageProps {
   vehicle: Vehicle;
@@ -49,6 +52,7 @@ export const VehicleDetailPage: React.FC<VehicleDetailPageProps> = ({
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [appointmentModalType, setAppointmentModalType] = useState<'VIEWING' | 'TEST_DRIVE' | null>(null);
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [similarCars, setSimilarCars] = useState<Vehicle[]>([]);
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -149,6 +153,16 @@ export const VehicleDetailPage: React.FC<VehicleDetailPageProps> = ({
                   </span>
                 )}
               </button>
+
+              {/* PDF Brochure & Dossier Button */}
+              <button
+                onClick={() => setShowPdfModal(true)}
+                title="دریافت شناسنامه فنی و شرایط خرید (فایل PDF)"
+                className="p-3 bg-[#0A0A0A] border border-[#D4AF37]/50 hover:border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-colors flex items-center gap-2 text-xs font-semibold shadow-[0_0_10px_rgba(212,175,55,0.15)]"
+              >
+                <FileText className="w-5 h-5 text-[#D4AF37]" />
+                <span className="hidden sm:inline">کاتالوگ و شناسنامه PDF</span>
+              </button>
             </div>
           </div>
         </div>
@@ -205,8 +219,9 @@ export const VehicleDetailPage: React.FC<VehicleDetailPageProps> = ({
               {/* Primary Large Image Frame */}
               <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#0A0A0A] border border-white/10">
                 <img
-                  src={vehicle.images[selectedImageIndex]?.url || vehicle.images[0]?.url}
+                  src={getSafeImageUrl(vehicle.images[selectedImageIndex]?.url || vehicle.images[0]?.url)}
                   alt={vehicle.modelNameEn}
+                  onError={handleImageError}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
@@ -224,7 +239,12 @@ export const VehicleDetailPage: React.FC<VehicleDetailPageProps> = ({
                         : 'border-white/10 opacity-60 hover:opacity-100'
                     }`}
                   >
-                    <img src={img.url} alt="" className="w-full h-full object-cover" />
+                    <img
+                      src={getSafeImageUrl(img.url)}
+                      alt=""
+                      onError={handleImageError}
+                      className="w-full h-full object-cover"
+                    />
                   </button>
                 ))}
               </div>
@@ -500,6 +520,15 @@ export const VehicleDetailPage: React.FC<VehicleDetailPageProps> = ({
                     درخواست تست درایو
                   </button>
                 </div>
+
+                {/* PDF Dossier & Brochure Download Button */}
+                <button
+                  onClick={() => setShowPdfModal(true)}
+                  className="w-full mt-3 py-2.5 px-3 text-xs font-semibold text-[#D4AF37] bg-[#D4AF37]/5 border border-[#D4AF37]/40 hover:border-[#D4AF37] hover:bg-[#D4AF37]/15 transition-all flex items-center justify-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>دریافت شناسنامه فنی و شرایط خرید (PDF)</span>
+                </button>
               </div>
 
               {/* Showroom & Concierge Contact Card */}
@@ -561,6 +590,15 @@ export const VehicleDetailPage: React.FC<VehicleDetailPageProps> = ({
           vehicle={vehicle}
           type={appointmentModalType}
           onClose={() => setAppointmentModalType(null)}
+        />
+      )}
+
+      {/* PDF Brochure & Dossier Modal */}
+      {showPdfModal && (
+        <VehiclePdfBrochureModal
+          vehicle={vehicle}
+          currency={currency}
+          onClose={() => setShowPdfModal(false)}
         />
       )}
     </div>

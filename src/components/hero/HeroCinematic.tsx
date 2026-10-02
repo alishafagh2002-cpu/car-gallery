@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { ChevronDown, ArrowLeft, Box, Sparkles } from 'lucide-react';
-import { VehicleThreeCanvas } from './VehicleThreeCanvas';
+import React from 'react';
+import { ArrowLeft, ChevronDown } from 'lucide-react';
 
 interface HeroCinematicProps {
   onExploreCars: () => void;
@@ -11,51 +10,23 @@ export const HeroCinematic: React.FC<HeroCinematicProps> = ({
   onExploreCars,
   onOpenConsultation,
 }) => {
-  const [viewMode, setViewMode] = useState<'CINEMATIC_PHOTO' | 'THREE_3D'>('CINEMATIC_PHOTO');
-
   return (
     <section className="relative w-full h-[calc(100vh-80px)] min-h-[640px] max-h-[1050px] overflow-hidden bg-[#050505] flex items-center">
-      {/* Background Layer: High-impact cinematic photograph OR Three.js 3D spatial canvas */}
+      {/* Background Layer: High-impact cinematic photograph */}
       <div className="absolute inset-0 z-0">
-        {viewMode === 'THREE_3D' ? (
-          <VehicleThreeCanvas interactive={true} />
-        ) : (
-          <div className="relative w-full h-full">
-            <img
-              src="/src/assets/images/hero_luxury_hypercar_1790889964433.jpg"
-              alt="NOIR MOTORS Flagship Hypercar"
-              className="w-full h-full object-cover object-center scale-105 transition-transform duration-1000 ease-out"
-            />
-            {/* Measured luxury contrast scrims */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-[#050505]/60" />
-            <div className="absolute inset-0 bg-radial from-transparent via-[#050505]/50 to-[#050505]" />
-          </div>
-        )}
-      </div>
-
-      {/* Mode Switcher Floating Pill in Hero (Toggle between 3D Canvas and Cinematic Photography) */}
-      <div className="absolute top-8 left-6 z-20 hidden sm:flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/10 p-1 text-xs">
-        <button
-          onClick={() => setViewMode('CINEMATIC_PHOTO')}
-          className={`px-3 py-1.5 transition-colors ${
-            viewMode === 'CINEMATIC_PHOTO'
-              ? 'bg-white/15 text-white font-medium'
-              : 'text-white/50 hover:text-white'
-          }`}
-        >
-          روایت سینمایی
-        </button>
-        <button
-          onClick={() => setViewMode('THREE_3D')}
-          className={`px-3 py-1.5 flex items-center gap-1.5 transition-colors ${
-            viewMode === 'THREE_3D'
-              ? 'bg-[#D4AF37]/20 text-[#D4AF37] font-medium border border-[#D4AF37]/30'
-              : 'text-white/50 hover:text-white'
-          }`}
-        >
-          <Box className="w-3.5 h-3.5" />
-          <span>استودیو سه‌بعدی Three.js</span>
-        </button>
+        <div className="relative w-full h-full">
+          <img
+            src="/images/amg_gt_coupe_1790928493746.jpg"
+            alt="NOIR MOTORS Flagship Hypercar"
+            onError={(e) => {
+              e.currentTarget.src = '/images/amg_gt_coupe_1790928493746.jpg';
+            }}
+            className="w-full h-full object-cover object-center scale-105 transition-transform duration-1000 ease-out"
+          />
+          {/* Measured luxury contrast scrims */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-[#050505]/60" />
+          <div className="absolute inset-0 bg-radial from-transparent via-[#050505]/50 to-[#050505]" />
+        </div>
       </div>
 
       {/* Hero Content Overlay Layer */}

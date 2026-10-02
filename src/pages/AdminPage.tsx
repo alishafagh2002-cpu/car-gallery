@@ -14,6 +14,14 @@ import {
   X,
   RefreshCw,
   Building,
+  Lock,
+  KeyRound,
+  LogOut,
+  Eye,
+  EyeOff,
+  ShieldAlert,
+  ArrowLeft,
+  CheckCircle2,
 } from 'lucide-react';
 import {
   Vehicle,
@@ -24,6 +32,7 @@ import {
   RequestStatus,
 } from '../types';
 import { CarService } from '../services/api';
+import { useAdminAuth } from '../hooks/useAdminAuth';
 import { formatPrice } from '../utils/formatters';
 
 interface AdminPageProps {
@@ -31,6 +40,21 @@ interface AdminPageProps {
 }
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onBack }) => {
+  // Security Authentication Hook
+  const {
+    isAuthenticated,
+    isLoading: isAuthLoading,
+    login,
+    logout,
+    lastLoginTime,
+    masterPasswordHint,
+  } = useAdminAuth();
+
+  const [passwordInput, setPasswordInput] = useState('');
+  const [authError, setAuthError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isSubmittingAuth, setIsSubmittingAuth] = useState(false);
+
   const [activeTab, setActiveTab] = useState<'METRICS' | 'VEHICLES' | 'PURCHASE_REQUESTS' | 'APPOINTMENTS'>('METRICS');
   const [metrics, setMetrics] = useState<AdminDashboardMetrics | null>(null);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -74,8 +98,23 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onBack }) => {
   };
 
   useEffect(() => {
-    refreshAllData();
-  }, []);
+    if (isAuthenticated) {
+      refreshAllData();
+    }
+  }, [isAuthenticated]);
+
+  const handleAuthSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError('');
+    setIsSubmittingAuth(true);
+    const res = login(passwordInput);
+    if (!res.success) {
+      setAuthError(res.error || 'رمز عبور نامعتبر است.');
+    } else {
+      setPasswordInput('');
+    }
+    setIsSubmittingAuth(false);
+  };
 
   const handleSaveVehicle = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -150,22 +189,198 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onBack }) => {
     refreshAllData();
   };
 
+  // If not authenticated, render login form at top of page
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#050505] text-[#F2F0EA] py-10">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
+          {/* Top navigation row */}
+          <div className="flex items-center justify-between pb-6 mb-8 border-b border-white/[0.08]">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 bg-[#D4AF37]/15 border border-[#D4AF37]/40 text-[#D4AF37]">
+                <ShieldAlert className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] font-mono tracking-widest text-[#D4AF37] uppercase">
+                  RESTRICTED PORTAL · CLEARANCE REQUIRED
+                </span>
+                <div className="text-base font-bold text-white font-persian">
+                  سامانه مدیریت و کارشناسی نوآر موتورز
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={onBack}
+              className="px-3.5 py-1.5 text-xs text-white/70 hover:text-white border border-white/10 hover:border-white/30 transition-colors flex items-center gap-1.5"
+            >
+              <span>بازگشت به سایت</span>
+              <ArrowLeft className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          {/* Primary Authentication Form AT THE TOP */}
+          <div className="bg-[#0A0A0C] border border-[#D4AF37]/50 shadow-[0_0_30px_rgba(212,175,55,0.08)] p-6 sm:p-10 relative overflow-hidden mb-10">
+            <div className="max-w-md mx-auto space-y-6">
+              <div className="text-center space-y-2">
+                <div className="w-14 h-14 rounded-full bg-[#D4AF37]/10 border-2 border-[#D4AF37] flex items-center justify-center mx-auto text-[#D4AF37] shadow-[0_0_20px_rgba(212,175,55,0.25)]">
+                  <Lock className="w-6 h-6" />
+                </div>
+                <div className="text-[11px] font-mono tracking-widest text-[#D4AF37] uppercase">
+                  SECURITY CLEARANCE LEVEL 3
+                </div>
+                <h2 className="text-xl sm:text-2xl font-bold text-white font-persian">
+                  ورود امن به پنل مدیریت
+                </h2>
+                <p className="text-xs text-white/60 leading-relaxed max-w-sm mx-auto">
+                  دسترسی به بخش مدیریت خودروها، تغییر قیمت‌ها، بررسی بیعانه‌ها و زمان‌بندی تست درایو مستلزم ورود رمز عبور اختصاصی مدیر ارشد می‌باشد.
+                </p>
+              </div>
+
+              {authError && (
+                <div className="p-3 bg-rose-950/50 border border-rose-500/40 text-rose-300 text-xs text-right flex items-center gap-2">
+                  <ShieldAlert className="w-4 h-4 shrink-0 text-rose-400" />
+                  <span>{authError}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleAuthSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-medium text-white/80 mb-1.5 text-right">
+                    رمز عبور مدیر ارشد (Admin Password) *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      value={passwordInput}
+                      onChange={(e) => setPasswordInput(e.target.value)}
+                      placeholder="رمز عبور مدیریت را وارد فرمایید..."
+                      autoFocus
+                      required
+                      className="w-full bg-black/60 border border-white/15 px-4 py-3 pl-12 pr-10 text-sm text-white placeholder-white/30 focus:border-[#D4AF37] focus:outline-none font-mono"
+                    />
+                    <KeyRound className="absolute right-3.5 top-3.5 w-4 h-4 text-white/40" />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute left-3 top-3 text-white/40 hover:text-white transition-colors"
+                      title={showPassword ? 'مخفی کردن' : 'نمایش رمز'}
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmittingAuth}
+                  className="w-full py-3.5 text-xs font-bold text-[#050505] bg-[#D4AF37] hover:bg-[#F2F0EA] transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(212,175,55,0.3)] disabled:opacity-50"
+                >
+                  <Shield className="w-4 h-4" />
+                  <span>احراز هویت و ورود به پنل</span>
+                </button>
+              </form>
+
+              {/* Demo Hint & Quick Autofill */}
+              <div className="pt-4 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between text-[11px] text-white/50 gap-2 bg-white/[0.02] p-3 border border-white/[0.04]">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[#D4AF37] font-semibold">کلید پیش‌فرض دمو:</span>
+                  <code className="text-[#D4AF37] font-mono bg-black/60 px-2 py-0.5 border border-white/10">
+                    {masterPasswordHint}
+                  </code>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setPasswordInput(masterPasswordHint)}
+                  className="text-white/70 hover:text-[#D4AF37] underline decoration-[#D4AF37]/50"
+                >
+                  درج خودکار رمز دمو
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Locked Dashboard Overview & Compliance Guarantee */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-xs font-mono text-white/40 uppercase tracking-widest">
+              <Lock className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <span>PROTECTED MODULES · READ-ONLY PREVIEW</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="bg-[#08080A] border border-white/[0.06] p-5 opacity-60 space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-white font-semibold">داشبورد ارزش‌گذاری مالی</span>
+                  <span className="text-[10px] text-[#D4AF37] font-mono bg-[#D4AF37]/10 px-2 py-0.5">LOCKED</span>
+                </div>
+                <p className="text-xs text-white/40 leading-relaxed">
+                  گزارش‌های تحلیلی، ارزیابی کل سبد موجودی و نرخ رشد ماهانه.
+                </p>
+              </div>
+
+              <div className="bg-[#08080A] border border-white/[0.06] p-5 opacity-60 space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-white font-semibold">مدیریت ناوگان و کاتالوگ خودروها</span>
+                  <span className="text-[10px] text-[#D4AF37] font-mono bg-[#D4AF37]/10 px-2 py-0.5">LOCKED</span>
+                </div>
+                <p className="text-xs text-white/40 leading-relaxed">
+                  ثبت سوپراسپرت‌های جدید، تغییر قیمت‌ها و به‌روزرسانی اسناد گمرکی.
+                </p>
+              </div>
+
+              <div className="bg-[#08080A] border border-white/[0.06] p-5 opacity-60 space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-white font-semibold">پرونده‌های ودیعه و خرید رسمی</span>
+                  <span className="text-[10px] text-[#D4AF37] font-mono bg-[#D4AF37]/10 px-2 py-0.5">LOCKED</span>
+                </div>
+                <p className="text-xs text-white/40 leading-relaxed">
+                  بررسی پیش‌فاکتورها، استعلام هویت خریداران و تایید انتقال سند.
+                </p>
+              </div>
+
+              <div className="bg-[#08080A] border border-white/[0.06] p-5 opacity-60 space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-white font-semibold">هماهنگی نوبت‌های بازدید و تست درایو</span>
+                  <span className="text-[10px] text-[#D4AF37] font-mono bg-[#D4AF37]/10 px-2 py-0.5">LOCKED</span>
+                </div>
+                <p className="text-xs text-white/40 leading-relaxed">
+                  زمان‌بندی تست درایو در شو‌روم‌های فرشته، کیش و اهواز.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#050505] text-[#F2F0EA] py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Admin Header */}
+        {/* Admin Header with Active Session & Logout */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-white/[0.08] gap-4">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37]">
               <Shield className="w-6 h-6" />
             </div>
             <div>
-              <div className="text-xs font-mono tracking-widest text-[#D4AF37] uppercase">
-                NOIR MOTORS · EXECUTIVE CMS & AUDIT DESK
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono tracking-widest text-[#D4AF37] uppercase">
+                  NOIR MOTORS · EXECUTIVE CMS & AUDIT DESK
+                </span>
+                <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-mono bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  AUTHENTICATED
+                </span>
               </div>
-              <h1 className="text-2xl font-bold text-white font-persian">
+              <h1 className="text-2xl font-bold text-white font-persian mt-0.5">
                 پنل مدیریت متمرکز و کارشناسی
               </h1>
+              {lastLoginTime && (
+                <div className="text-[11px] text-white/40 mt-0.5">
+                  ورود در ساعت: {lastLoginTime} (نشست فعال مدیریت)
+                </div>
+              )}
             </div>
           </div>
 
@@ -179,10 +394,19 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onBack }) => {
             </button>
 
             <button
+              onClick={logout}
+              className="px-3.5 py-2 text-xs border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 hover:border-rose-500/60 transition-colors flex items-center gap-1.5"
+              title="خروج از حساب مدیریت"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>خروج از مدیریت</span>
+            </button>
+
+            <button
               onClick={onBack}
               className="px-4 py-2 text-xs border border-white/20 text-white hover:bg-white/[0.05]"
             >
-              خروج و بازگشت به سایت
+              بازگشت به سایت
             </button>
           </div>
         </div>

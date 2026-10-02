@@ -3,6 +3,8 @@ import { Search, Filter, SlidersHorizontal, RotateCcw, ChevronLeft, ChevronRight
 import { Vehicle, CurrencyMode, CarFilterParams, BrandInfo } from '../types';
 import { CarService } from '../services/api';
 import { VehicleCard } from '../components/vehicles/VehicleCard';
+import { VehicleListSkeleton } from '../components/vehicles/VehicleListSkeleton';
+import { AutocompleteSearchBar } from '../components/common/AutocompleteSearchBar';
 import { FREE_ZONES } from '../data/locations';
 
 interface InventoryPageProps {
@@ -118,27 +120,17 @@ export const InventoryPage: React.FC<InventoryPageProps> = ({
 
         {/* Search Bar & Sorting Controls */}
         <div className="mb-8 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-          {/* Search Input */}
-          <div className="md:col-span-8 relative">
-            <input
-              type="text"
+          {/* Autocomplete Search Input */}
+          <div className="md:col-span-8">
+            <AutocompleteSearchBar
               value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
+              onChange={(val) => {
+                setSearch(val);
                 setPage(1);
               }}
-              placeholder="جستجو بر اساس برند، مدل (پورشه ۹۱۱، جی۶۳، لندکروزر...) یا مشخصات..."
-              className="w-full bg-[#0A0A0A] border border-white/10 px-4 py-3 text-xs sm:text-sm text-white focus:border-[#D4AF37] focus:outline-none transition-colors"
+              onSelectCar={onSelectCar}
+              currency={currency}
             />
-            <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-white/30" />
-            {search && (
-              <button
-                onClick={() => setSearch('')}
-                className="absolute left-10 top-3.5 text-white/40 hover:text-white"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
           </div>
 
           {/* Sort Selector */}
@@ -328,11 +320,7 @@ export const InventoryPage: React.FC<InventoryPageProps> = ({
           {/* Vehicle Grid Container */}
           <main className="md:col-span-3">
             {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div key={i} className="h-96 bg-white/[0.02] border border-white/[0.05] animate-pulse" />
-                ))}
-              </div>
+              <VehicleListSkeleton count={6} gridClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" />
             ) : vehicles.length === 0 ? (
               <div className="text-center py-24 bg-[#0A0A0A] border border-white/[0.08] p-8">
                 <SlidersHorizontal className="w-10 h-10 text-white/20 mx-auto mb-4" />

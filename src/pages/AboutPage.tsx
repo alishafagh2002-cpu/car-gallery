@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShieldCheck, Award, FileText, Landmark, Users } from 'lucide-react';
+import { getSafeImageUrl, handleImageError } from '../utils/imageHelper';
 
 interface AboutPageProps {
   onNavigate: (path: string) => void;
@@ -26,8 +27,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenConsulta
         {/* Feature Editorial Image */}
         <div className="relative aspect-[21/9] w-full border border-white/10 overflow-hidden bg-black">
           <img
-            src="/src/assets/images/hero_luxury_sedan_1790889996887.jpg"
+            src={getSafeImageUrl('/images/hero_luxury_sedan_1790889996887.jpg')}
             alt="Noir Motors Showroom Pavilion"
+            onError={handleImageError}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />

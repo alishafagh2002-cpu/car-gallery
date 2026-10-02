@@ -4,6 +4,8 @@ import { Vehicle, CurrencyMode, FreeZoneInfo } from '../types';
 import { FREE_ZONES } from '../data/locations';
 import { CarService } from '../services/api';
 import { VehicleCard } from '../components/vehicles/VehicleCard';
+import { VehicleListSkeleton } from '../components/vehicles/VehicleListSkeleton';
+import { getSafeImageUrl, handleImageError } from '../utils/imageHelper';
 
 interface LocationDetailPageProps {
   zoneSlug: string;
@@ -49,8 +51,9 @@ export const LocationDetailPage: React.FC<LocationDetailPageProps> = ({
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
         <div className="relative aspect-[21/9] min-h-[360px] w-full overflow-hidden border border-white/10 bg-[#0A0A0A]">
           <img
-            src={zone.coverImage}
+            src={getSafeImageUrl(zone.coverImage)}
             alt={zone.nameFa}
+            onError={handleImageError}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent" />
@@ -107,11 +110,7 @@ export const LocationDetailPage: React.FC<LocationDetailPageProps> = ({
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[1, 2, 3].map((n) => (
-                <div key={n} className="h-80 bg-white/[0.02] border border-white/5 animate-pulse" />
-              ))}
-            </div>
+            <VehicleListSkeleton count={3} gridClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" />
           ) : vehicles.length === 0 ? (
             <div className="text-center py-16 bg-[#0A0A0A] border border-white/[0.08] text-xs text-white/50">
               در حال حاضر خودرویی با پلاک این منطقه در نمایشگاه ثبت نشده است. برای سفارش با واحد بازرگانی تماس حاصل فرمایید.

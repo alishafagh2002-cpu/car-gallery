@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { HeroCinematic } from '../components/hero/HeroCinematic';
 import { VehicleCard } from '../components/vehicles/VehicleCard';
+import { VehicleListSkeleton } from '../components/vehicles/VehicleListSkeleton';
+import { MarketPriceTrends } from '../components/analytics/MarketPriceTrends';
 import { Vehicle, CurrencyMode, FreeZoneInfo } from '../types';
 import { CarService } from '../services/api';
 import { FREE_ZONES } from '../data/locations';
+import { getSafeImageUrl, handleImageError } from '../utils/imageHelper';
 import { ArrowLeft, ArrowUpRight, ShieldCheck, FileText, Anchor, Compass, Clock, Award } from 'lucide-react';
 
 interface HomePageProps {
@@ -62,11 +65,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3].map((n) => (
-              <div key={n} className="h-96 bg-white/[0.03] animate-pulse border border-white/[0.05]" />
-            ))}
-          </div>
+          <VehicleListSkeleton count={3} gridClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredCars.map((car) => (
@@ -75,6 +74,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 vehicle={car}
                 currency={currency}
                 onSelect={onSelectCar}
+                showAuctionCountdown={true}
               />
             ))}
           </div>
@@ -105,8 +105,9 @@ export const HomePage: React.FC<HomePageProps> = ({
               >
                 <div className="relative aspect-[16/9] w-full overflow-hidden">
                   <img
-                    src={zone.coverImage}
+                    src={getSafeImageUrl(zone.coverImage)}
                     alt={zone.nameFa}
+                    onError={handleImageError}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c0e] via-black/40 to-transparent" />
@@ -144,7 +145,10 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 4. The Editorial Manifesto: "The Art of Acquisition" */}
+      {/* 4. Market Price Intelligence & Trends Visualization */}
+      <MarketPriceTrends currency={currency} />
+
+      {/* 5. The Editorial Manifesto: "The Art of Acquisition" */}
       <section className="py-24 border-b border-white/[0.08] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="space-y-6">
@@ -200,7 +204,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           {/* Right Visual Box */}
           <div className="relative aspect-[4/3] border border-white/10 overflow-hidden bg-black/40">
             <img
-              src="/src/assets/images/hero_luxury_sedan_1790889996887.jpg"
+              src="/images/hero_luxury_sedan_1790889996887.jpg"
               alt="Noir Motors VIP Inspection Lounge"
               className="w-full h-full object-cover"
             />

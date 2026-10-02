@@ -2,6 +2,7 @@ import React from 'react';
 import { X, ArrowLeft } from 'lucide-react';
 import { Vehicle, CurrencyMode } from '../../types';
 import { formatPrice } from '../../utils/formatters';
+import { getSafeImageUrl, handleImageError } from '../../utils/imageHelper';
 
 interface CompareDrawerProps {
   vehicles: Vehicle[];
@@ -62,8 +63,9 @@ export const CompareDrawer: React.FC<CompareDrawerProps> = ({
 
               <div className="flex gap-3 items-center">
                 <img
-                  src={v.images[0]?.url}
+                  src={getSafeImageUrl(v.images[0]?.url)}
                   alt={v.modelNameEn}
+                  onError={handleImageError}
                   className="w-20 h-14 object-cover shrink-0 bg-neutral-900"
                 />
                 <div className="overflow-hidden">

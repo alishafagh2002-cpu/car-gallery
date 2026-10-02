@@ -36,9 +36,9 @@ export const SEED_VEHICLES: Vehicle[] = [
     freeZoneSlug: 'kish',
     freeZoneNameFa: 'منطقه آزاد کیش',
     images: [
-      { id: 'img-1-1', url: '/src/assets/images/hero_supercar_studio_1790889986619.jpg', category: 'EXTERIOR', isPrimary: true },
-      { id: 'img-1-2', url: '/src/assets/images/hero_luxury_hypercar_1790889964433.jpg', category: 'EXTERIOR' },
-      { id: 'img-1-3', url: '/src/assets/images/hero_kish_marina_1790889976659.jpg', category: 'COCKPIT' },
+      { id: 'img-1-1', url: '/images/amg_gt_coupe_1790928493746.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-1-2', url: '/images/vision_one_eleven_1790928480683.jpg', category: 'EXTERIOR' },
+      { id: 'img-1-3', url: '/images/mercedes_luxury_sedan_1790928504394.jpg', category: 'COCKPIT' },
     ],
     specifications: {
       acceleration0to100: 3.5,
@@ -102,9 +102,9 @@ export const SEED_VEHICLES: Vehicle[] = [
     locationCityFa: 'تهران',
     locationCityEn: 'Tehran',
     images: [
-      { id: 'img-2-1', url: '/src/assets/images/hero_kish_marina_1790889976659.jpg', category: 'EXTERIOR', isPrimary: true },
-      { id: 'img-2-2', url: '/src/assets/images/hero_luxury_sedan_1790889996887.jpg', category: 'EXTERIOR' },
-      { id: 'img-2-3', url: '/src/assets/images/hero_luxury_hypercar_1790889964433.jpg', category: 'COCKPIT' },
+      { id: 'img-2-1', url: '/images/mercedes_g63_amg_1790928523853.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-2-2', url: '/images/amg_gt_coupe_1790928493746.jpg', category: 'EXTERIOR' },
+      { id: 'img-2-3', url: '/images/vision_one_eleven_1790928480683.jpg', category: 'COCKPIT' },
     ],
     specifications: {
       acceleration0to100: 4.5,
@@ -165,8 +165,8 @@ export const SEED_VEHICLES: Vehicle[] = [
     freeZoneSlug: 'arvand',
     freeZoneNameFa: 'منطقه آزاد اروند',
     images: [
-      { id: 'img-3-1', url: '/src/assets/images/hero_luxury_sedan_1790889996887.jpg', category: 'EXTERIOR', isPrimary: true },
-      { id: 'img-3-2', url: '/src/assets/images/hero_kish_marina_1790889976659.jpg', category: 'EXTERIOR' },
+      { id: 'img-3-1', url: '/images/mercedes_luxury_sedan_1790928504394.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-3-2', url: '/images/amg_gt_coupe_1790928493746.jpg', category: 'EXTERIOR' },
     ],
     specifications: {
       acceleration0to100: 4.6,
@@ -227,8 +227,8 @@ export const SEED_VEHICLES: Vehicle[] = [
     freeZoneSlug: 'kish',
     freeZoneNameFa: 'منطقه آزاد کیش',
     images: [
-      { id: 'img-4-1', url: '/src/assets/images/hero_kish_marina_1790889976659.jpg', category: 'EXTERIOR', isPrimary: true },
-      { id: 'img-4-2', url: '/src/assets/images/hero_luxury_sedan_1790889996887.jpg', category: 'EXTERIOR' },
+      { id: 'img-4-1', url: '/images/amg_sl_roadster_1790928515177.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-4-2', url: '/images/mercedes_luxury_sedan_1790928504394.jpg', category: 'EXTERIOR' },
     ],
     specifications: {
       acceleration0to100: 6.9,
@@ -287,7 +287,8 @@ export const SEED_VEHICLES: Vehicle[] = [
     freeZoneSlug: 'chabahar',
     freeZoneNameFa: 'منطقه آزاد چابهار',
     images: [
-      { id: 'img-5-1', url: '/src/assets/images/hero_kish_marina_1790889976659.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-5-1', url: '/images/vision_one_eleven_1790928480683.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-5-2', url: '/images/amg_gt_coupe_1790928493746.jpg', category: 'EXTERIOR' },
     ],
     specifications: {
       acceleration0to100: 6.7,
@@ -343,7 +344,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     locationCityFa: 'تهران (زعفرانیه)',
     locationCityEn: 'Tehran',
     images: [
-      { id: 'img-6-1', url: '/src/assets/images/hero_supercar_studio_1790889986619.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-6-1', url: '/images/hero_supercar_studio_1790889986619.jpg', category: 'EXTERIOR', isPrimary: true },
     ],
     specifications: {
       acceleration0to100: 3.5,
@@ -400,7 +401,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     freeZoneSlug: 'arvand',
     freeZoneNameFa: 'منطقه آزاد اروند',
     images: [
-      { id: 'img-7-1', url: '/src/assets/images/hero_luxury_sedan_1790889996887.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-7-1', url: '/images/hero_luxury_sedan_1790889996887.jpg', category: 'EXTERIOR', isPrimary: true },
     ],
     specifications: {
       acceleration0to100: 3.8,
@@ -456,7 +457,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     locationCityFa: 'تهران (فرشته)',
     locationCityEn: 'Tehran',
     images: [
-      { id: 'img-8-1', url: '/src/assets/images/hero_luxury_hypercar_1790889964433.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-8-1', url: '/images/hero_luxury_hypercar_1790889964433.jpg', category: 'EXTERIOR', isPrimary: true },
     ],
     specifications: {
       acceleration0to100: 3.2,
@@ -513,7 +514,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     freeZoneSlug: 'qeshm',
     freeZoneNameFa: 'منطقه آزاد قشم',
     images: [
-      { id: 'img-9-1', url: '/src/assets/images/hero_kish_marina_1790889976659.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-9-1', url: '/images/hero_kish_marina_1790889976659.jpg', category: 'EXTERIOR', isPrimary: true },
     ],
     specifications: {
       acceleration0to100: 6.1,
@@ -570,7 +571,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     freeZoneSlug: 'anzali',
     freeZoneNameFa: 'منطقه آزاد انزلی',
     images: [
-      { id: 'img-10-1', url: '/src/assets/images/hero_luxury_sedan_1790889996887.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-10-1', url: '/images/hero_luxury_sedan_1790889996887.jpg', category: 'EXTERIOR', isPrimary: true },
     ],
     specifications: {
       acceleration0to100: 5.7,
@@ -627,7 +628,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     freeZoneSlug: 'kish',
     freeZoneNameFa: 'منطقه آزاد کیش',
     images: [
-      { id: 'img-11-1', url: '/src/assets/images/hero_kish_marina_1790889976659.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-11-1', url: '/images/hero_kish_marina_1790889976659.jpg', category: 'EXTERIOR', isPrimary: true },
     ],
     specifications: {
       acceleration0to100: 6.2,
@@ -684,7 +685,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     freeZoneSlug: 'maku',
     freeZoneNameFa: 'منطقه آزاد ماکو',
     images: [
-      { id: 'img-12-1', url: '/src/assets/images/hero_supercar_studio_1790889986619.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-12-1', url: '/images/hero_supercar_studio_1790889986619.jpg', category: 'EXTERIOR', isPrimary: true },
     ],
     specifications: {
       acceleration0to100: 3.9,
@@ -741,7 +742,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     freeZoneSlug: 'qeshm',
     freeZoneNameFa: 'منطقه آزاد قشم',
     images: [
-      { id: 'img-13-1', url: '/src/assets/images/hero_kish_marina_1790889976659.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-13-1', url: '/images/hero_kish_marina_1790889976659.jpg', category: 'EXTERIOR', isPrimary: true },
     ],
     specifications: {
       acceleration0to100: 6.5,
@@ -798,7 +799,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     freeZoneSlug: 'kish',
     freeZoneNameFa: 'منطقه آزاد کیش',
     images: [
-      { id: 'img-14-1', url: '/src/assets/images/hero_kish_marina_1790889976659.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-14-1', url: '/images/hero_kish_marina_1790889976659.jpg', category: 'EXTERIOR', isPrimary: true },
     ],
     specifications: {
       acceleration0to100: 6.5,
@@ -854,7 +855,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     locationCityFa: 'تهران (نیاوران)',
     locationCityEn: 'Tehran',
     images: [
-      { id: 'img-15-1', url: '/src/assets/images/hero_luxury_sedan_1790889996887.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-15-1', url: '/images/hero_luxury_sedan_1790889996887.jpg', category: 'EXTERIOR', isPrimary: true },
     ],
     specifications: {
       acceleration0to100: 4.4,
@@ -911,7 +912,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     freeZoneSlug: 'kish',
     freeZoneNameFa: 'منطقه آزاد کیش',
     images: [
-      { id: 'img-16-1', url: '/src/assets/images/hero_supercar_studio_1790889986619.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-16-1', url: '/images/hero_supercar_studio_1790889986619.jpg', category: 'EXTERIOR', isPrimary: true },
     ],
     specifications: {
       acceleration0to100: 3.3,
@@ -967,7 +968,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     locationCityFa: 'تهران (الهیه)',
     locationCityEn: 'Tehran',
     images: [
-      { id: 'img-17-1', url: '/src/assets/images/hero_luxury_hypercar_1790889964433.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-17-1', url: '/images/hero_luxury_hypercar_1790889964433.jpg', category: 'EXTERIOR', isPrimary: true },
     ],
     specifications: {
       acceleration0to100: 3.4,
@@ -1024,7 +1025,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     freeZoneSlug: 'arvand',
     freeZoneNameFa: 'منطقه آزاد اروند',
     images: [
-      { id: 'img-18-1', url: '/src/assets/images/hero_kish_marina_1790889976659.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-18-1', url: '/images/hero_kish_marina_1790889976659.jpg', category: 'EXTERIOR', isPrimary: true },
     ],
     specifications: {
       acceleration0to100: 5.2,
@@ -1081,7 +1082,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     freeZoneSlug: 'kish',
     freeZoneNameFa: 'منطقه آزاد کیش',
     images: [
-      { id: 'img-19-1', url: '/src/assets/images/hero_supercar_studio_1790889986619.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-19-1', url: '/images/hero_supercar_studio_1790889986619.jpg', category: 'EXTERIOR', isPrimary: true },
     ],
     specifications: {
       acceleration0to100: 4.1,
@@ -1137,8 +1138,8 @@ export const SEED_VEHICLES: Vehicle[] = [
     locationCityFa: 'تهران (اقدسیه)',
     locationCityEn: 'Tehran',
     images: [
-      { id: 'img-20-1', url: '/src/assets/images/hero_luxury_sedan_1790889996887.jpg', category: 'EXTERIOR', isPrimary: true },
-      { id: 'img-20-2', url: '/src/assets/images/hero_kish_marina_1790889976659.jpg', category: 'COCKPIT' },
+      { id: 'img-20-1', url: '/images/hero_luxury_sedan_1790889996887.jpg', category: 'EXTERIOR', isPrimary: true },
+      { id: 'img-20-2', url: '/images/hero_kish_marina_1790889976659.jpg', category: 'COCKPIT' },
     ],
     specifications: {
       acceleration0to100: 4.9,

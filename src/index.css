@@ -53,3 +53,36 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #404040;
 }
+
+/* Luxury Gold-Black Skeleton Shimmer */
+@keyframes goldShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.luxury-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.luxury-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.02) 20%,
+    rgba(212, 175, 55, 0.14) 50%,
+    rgba(255, 255, 255, 0.02) 80%,
+    transparent 100%
+  );
+  animation: goldShimmer 2.4s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
